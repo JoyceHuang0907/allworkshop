@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <!-- 建議移除 maximum-scale 限制，以免影響移動裝置行為 -->
+    <!-- 移除 maximum-scale 限制 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workshop統整介紹</title>
     <style>
@@ -13,12 +13,12 @@
         }
         
         html, body {
-            height: auto;
-            overflow-y: auto !important;
+            min-height: 100vh;
+            overflow-y: auto;
             font-family: Arial, sans-serif;
             -webkit-overflow-scrolling: touch;
+            /* 讓觸控事件不被過度限制 */
             touch-action: pan-y;
-            position: relative;
         }
         
         .container {
@@ -26,9 +26,6 @@
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 15px;
-            overflow-y: visible;
-            position: relative;
-            z-index: 1;
         }
         
         .embed-container {
@@ -36,14 +33,11 @@
             width: 100%;
             height: 0;
             padding-top: 400%;
-            padding-bottom: 0;
             box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16);
             margin-top: 1.6em;
             margin-bottom: 0.9em;
             overflow: hidden;
             border-radius: 8px;
-            will-change: transform;
-            z-index: 2;
         }
         
         .embed-container iframe {
@@ -53,15 +47,11 @@
             top: 0;
             left: 0;
             border: none;
-            padding: 0;
-            margin: 0;
         }
         
         .extra-space {
             width: 100%;
             height: 100px;
-            position: relative;
-            z-index: 3;
         }
         
         @media (max-width: 768px) {
@@ -74,20 +64,23 @@
 <body>
     <div class="container">
         <div class="embed-container">
-            <iframe loading="lazy" src="https://www.canva.com/design/DAGg6jdNVco/Pui0lSOVvpDL4vN-1fETEw/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+            <iframe loading="lazy" src="https://www.canva.com/design/DAGg6jdNVco/Pui0lSOVvpDL4vN-1fETEw/view?embed" allowfullscreen allow="fullscreen"></iframe>
         </div>
-        
-        <!-- 確保頁面可滾動的額外空間 -->
+        <!-- 額外區塊確保內容足夠滾動 -->
         <div class="extra-space"></div>
     </div>
     
     <script>
-        // 簡化移動設備上的滾動處理，移除了會攔截觸控事件的程式碼
         document.addEventListener('DOMContentLoaded', function() {
-            if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                document.body.style.height = 'auto';
-                document.body.style.minHeight = '101vh';
-                document.body.style.overflow = 'auto';
+            var isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            var iframe = document.querySelector('.embed-container iframe');
+            if (isMobile && iframe) {
+                // 預設禁用 iframe 的互動，讓頁面可以順利滾動
+                iframe.style.pointerEvents = 'none';
+                // 若使用者點擊嵌入區塊，則啟用 iframe 互動（例如：點擊後可進行互動）
+                document.querySelector('.embed-container').addEventListener('click', function() {
+                    iframe.style.pointerEvents = 'auto';
+                });
             }
         });
     </script>
