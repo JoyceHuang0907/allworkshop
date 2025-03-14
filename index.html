@@ -1,47 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circle Clickable Area</title>
+    <title>Workshop統整介紹</title>
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
         .container {
-            position: relative;
-            max-width: 2000px;
-            margin: auto;
-        }
-        .container img {
             width: 100%;
-            height: auto;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
         }
-        .clickable-circle {
+        
+        .embed-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-top: 400%;
+            padding-bottom: 0;
+            box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16);
+            margin-top: 1.6em;
+            margin-bottom: 0.9em;
+            overflow: hidden;
+            border-radius: 8px;
+            will-change: transform;
+        }
+        
+        .embed-container iframe {
             position: absolute;
-            border-radius: 50%;
-            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border: none;
+            padding: 0;
+            margin: 0;
         }
-        .circle1 {
-            left: 5.76%; /* 115.2 / 2000 * 100% */
-            top: 96.26%; /* 7701 / 8000 * 100% */
-            width: 8.45%; /* 169 / 2000 * 100% */
-            height: 2.11%; /* 169 / 8000 * 100% */
-        }
-        .circle2 {
-            left: 38.81%; /* 776.2 / 2000 * 100% */
-            top: 96.26%; /* 7701.2 / 8000 * 100% */
-            width: 8.45%; /* 169 / 2000 * 100% */
-            height: 2.11%; /* 169 / 8000 * 100% */
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="https://raw.githubusercontent.com/JoyceHuang0907/allworkshop/main/Workshop%E7%B5%B1%E6%95%B4%E4%BB%8B%E7%B4%B9%20(1).png" alt="Workshop Background">
-        <a href="https://joycehuang0907.github.io/basic-wordshop/" target="_blank" class="clickable-circle circle1"></a>
-        <a href="https://joycehuang0907.github.io/medium-workshop/" target="_blank" class="clickable-circle circle2"></a>
+        <div class="embed-container">
+            <iframe loading="lazy" src="https://www.canva.com/design/DAGg6jdNVco/Pui0lSOVvpDL4vN-1fETEw/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+        </div>
     </div>
 </body>
 </html>
