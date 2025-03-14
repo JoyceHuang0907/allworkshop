@@ -17,7 +17,6 @@
             overflow-y: auto;
             font-family: Arial, sans-serif;
             -webkit-overflow-scrolling: touch;
-            /* 讓觸控事件不被過度限制 */
             touch-action: pan-y;
         }
         
@@ -66,22 +65,26 @@
         <div class="embed-container">
             <iframe loading="lazy" src="https://www.canva.com/design/DAGg6jdNVco/Pui0lSOVvpDL4vN-1fETEw/view?embed" allowfullscreen allow="fullscreen"></iframe>
         </div>
-        <!-- 額外區塊確保內容足夠滾動 -->
+        <!-- 額外區塊確保頁面高度足夠滾動 -->
         <div class="extra-space"></div>
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        // 利用 scroll 事件動態禁用 iframe 的觸控，避免其攔截滾動事件
+        document.addEventListener('DOMContentLoaded', function(){
             var iframe = document.querySelector('.embed-container iframe');
-            if (isMobile && iframe) {
-                // 預設禁用 iframe 的互動，讓頁面可以順利滾動
-                iframe.style.pointerEvents = 'none';
-                // 若使用者點擊嵌入區塊，則啟用 iframe 互動（例如：點擊後可進行互動）
-                document.querySelector('.embed-container').addEventListener('click', function() {
-                    iframe.style.pointerEvents = 'auto';
-                });
-            }
+            var isScrolling;
+            window.addEventListener('scroll', function(){
+                if (iframe) {
+                    iframe.style.pointerEvents = 'none';
+                }
+                window.clearTimeout(isScrolling);
+                isScrolling = setTimeout(function(){
+                    if (iframe) {
+                        iframe.style.pointerEvents = 'auto';
+                    }
+                }, 250);
+            });
         });
     </script>
 </body>
