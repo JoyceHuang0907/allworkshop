@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Workshop統整介紹</title>
     <style>
         * {
@@ -13,9 +13,11 @@
         
         html, body {
             height: auto;
-            overflow-y: auto;
+            overflow-y: auto !important;
             font-family: Arial, sans-serif;
             -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+            position: relative;
         }
         
         .container {
@@ -24,6 +26,8 @@
             margin: 20px auto;
             padding: 0 15px;
             overflow-y: visible;
+            position: relative;
+            z-index: 1;
         }
         
         .embed-container {
@@ -38,6 +42,7 @@
             overflow: hidden;
             border-radius: 8px;
             will-change: transform;
+            z-index: 2;
         }
         
         .embed-container iframe {
@@ -49,6 +54,13 @@
             border: none;
             padding: 0;
             margin: 0;
+        }
+        
+        .extra-space {
+            width: 100%;
+            height: 100px;
+            position: relative;
+            z-index: 3;
         }
         
         @media (max-width: 768px) {
@@ -63,9 +75,55 @@
         <div class="embed-container">
             <iframe loading="lazy" src="https://www.canva.com/design/DAGg6jdNVco/Pui0lSOVvpDL4vN-1fETEw/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
         </div>
+        
+        <!-- 確保頁面可滾動的額外空間 -->
+        <div class="extra-space"></div>
     </div>
     
-    <!-- 確保頁面可滾動的額外空間 -->
-    <div style="height: 50px;"></div>
+    <script>
+        // 確保頁面可以滾動
+        document.addEventListener('DOMContentLoaded', function() {
+            // 處理移動設備上的滾動問題
+            if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // 強制啟用滾動
+                document.body.style.height = 'auto';
+                document.body.style.minHeight = '101vh';
+                document.body.style.overflow = 'auto';
+                
+                // 處理 iframe 可能阻止觸摸事件的問題
+                const iframe = document.querySelector('iframe');
+                if (iframe) {
+                    // 創建一個透明覆蓋層以確保滾動事件能夠被捕獲
+                    const overlay = document.createElement('div');
+                    overlay.style.position = 'fixed';
+                    overlay.style.top = '0';
+                    overlay.style.left = '0';
+                    overlay.style.width = '100%';
+                    overlay.style.height = '100%';
+                    overlay.style.zIndex = '-1';
+                    overlay.style.pointerEvents = 'none';
+                    document.body.appendChild(overlay);
+                    
+                    // 確保 iframe 容器不會阻止文檔滾動
+                    const container = document.querySelector('.embed-container');
+                    if (container) {
+                        container.addEventListener('touchstart', function(e) {
+                            e.stopPropagation();
+                        }, { passive: true });
+                    }
+                }
+                
+                // 在 iOS 上特別處理
+                if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    document.body.style.webkitOverflowScrolling = 'touch';
+                    
+                    // 添加滾動事件監聽器以確保滾動正常工作
+                    window.addEventListener('scroll', function() {
+                        document.documentElement.style.height = 'auto';
+                    }, { passive: true });
+                }
+            }
+        });
+    </script>
 </body>
 </html>
